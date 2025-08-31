@@ -129,7 +129,12 @@ const OutfitRanking = () => {
                   </span>
                 </div>
 
-                <Progress value={outfit.percentage} className="mb-3 h-2" />
+                <div className="vote-bar-container mb-3">
+                  <div 
+                    className="vote-bar" 
+                    style={{ width: `${outfit.percentage}%` }}
+                  ></div>
+                </div>
 
                 <div className="flex items-center justify-between mb-3">
                   <Button
