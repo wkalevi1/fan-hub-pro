@@ -6,11 +6,13 @@ import { Badge } from './ui/badge';
 import { outfitData, getStoredVotes, storeVote } from './mockData';
 import { useToast } from '../hooks/use-toast';
 import useScrollAnimation from '../hooks/useScrollAnimation';
+import Loader from './Loader';
 
 const OutfitRanking = () => {
   const [outfits, setOutfits] = useState(outfitData);
   const [userVotes, setUserVotes] = useState({});
   const [selectedEmoji, setSelectedEmoji] = useState({});
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const sectionRef = useScrollAnimation();
 
