@@ -72,7 +72,7 @@ const QASection = () => {
         </div>
 
         {/* Question Form */}
-        <Card className="mb-12 bg-white/80 backdrop-blur-sm border-amber-200/50">
+        <Card className="card mb-12 border-amber-200/50">
           <CardHeader>
             <h3 className="text-xl font-semibold text-gray-900">
               Haz tu pregunta
