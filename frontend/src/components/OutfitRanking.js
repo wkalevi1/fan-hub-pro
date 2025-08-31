@@ -173,7 +173,9 @@ const OutfitRanking = () => {
                     </div>
                     <div className="space-y-1">
                       {outfit.comments.slice(0, 2).map(comment => (
-                        <p key={comment.id} className="text-xs text-gray-600 bg-gray-50 rounded px-2 py-1">
+                        <p key={comment.id} className={`text-xs text-gray-600 bg-gray-50 rounded px-2 py-1 ${
+                          comment.text.includes('Perfecto') || comment.text.includes('Amor') ? 'top-fan' : ''
+                        }`}>
                           {comment.emoji} {comment.text}
                         </p>
                       ))}
