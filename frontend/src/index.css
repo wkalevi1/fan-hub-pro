@@ -197,22 +197,27 @@ textarea:focus-visible {
 /* Mobile optimizations */
 @media (max-width: 640px) {
   .text-4xl {
-    @apply text-3xl;
+    font-size: 2.25rem;
+    line-height: 2.5rem;
   }
   
   .text-5xl {
-    @apply text-4xl;
+    font-size: 3rem;
+    line-height: 1;
   }
   
   .text-6xl {
-    @apply text-5xl;
+    font-size: 3.75rem;
+    line-height: 1;
   }
   
   .py-20 {
-    @apply py-12;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
   }
   
   .py-16 {
-    @apply py-10;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
   }
 }
