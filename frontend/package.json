@@ -9,7 +9,9 @@
     "lucide-react": "^0.457.0"
   },
   "scripts": {
-    "build": "real-scripts build"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test"
   }
 }
 
