@@ -30,22 +30,28 @@ const OutfitRanking = () => {
       return;
     }
 
-    setOutfits(prev => 
-      prev.map(outfit => 
-        outfit.id === outfitId 
-          ? { ...outfit, votes: outfit.votes + 1, percentage: outfit.percentage + 1 }
-          : outfit
-      )
-    );
+    setLoading(true);
+    
+    // Simulate API call delay
+    setTimeout(() => {
+      setOutfits(prev => 
+        prev.map(outfit => 
+          outfit.id === outfitId 
+            ? { ...outfit, votes: outfit.votes + 1, percentage: outfit.percentage + 1 }
+            : outfit
+        )
+      );
 
-    const newVotes = { ...userVotes, [outfitId]: true };
-    setUserVotes(newVotes);
-    storeVote(outfitId);
+      const newVotes = { ...userVotes, [outfitId]: true };
+      setUserVotes(newVotes);
+      storeVote(outfitId);
+      setLoading(false);
 
-    toast({
-      title: "¡Voto registrado!",
-      description: "Gracias por votar por tu outfit favorito.",
-    });
+      toast({
+        title: "¡Voto registrado!",
+        description: "Gracias por votar por tu outfit favorito.",
+      });
+    }, 800);
   };
 
   const addEmoji = (outfitId, emoji) => {
