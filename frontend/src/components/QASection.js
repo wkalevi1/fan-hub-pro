@@ -99,6 +99,19 @@ const QASection = () => {
     });
   };
 
+  if (loading) {
+    return (
+      <section ref={sectionRef} className="section section-bg py-16 lg:py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <Loader size="lg" />
+            <p className="mt-4 text-gray-600">Cargando preguntas...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section ref={sectionRef} className="section section-bg py-16 lg:py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
