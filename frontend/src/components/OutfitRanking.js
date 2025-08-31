@@ -3,22 +3,42 @@ import { Heart, MessageCircle, TrendingUp, Award } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
-import { outfitData, getStoredVotes, storeVote } from './mockData';
+import { outfitsAPI, votesAPI, sessionAPI } from '../services/api';
 import { useToast } from '../hooks/use-toast';
 import useScrollAnimation from '../hooks/useScrollAnimation';
 import Loader from './Loader';
 
 const OutfitRanking = () => {
-  const [outfits, setOutfits] = useState(outfitData);
+  const [outfits, setOutfits] = useState([]);
   const [userVotes, setUserVotes] = useState({});
-  const [selectedEmoji, setSelectedEmoji] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [votingLoading, setVotingLoading] = useState({});
   const { toast } = useToast();
   const sectionRef = useScrollAnimation();
 
   useEffect(() => {
-    setUserVotes(getStoredVotes());
+    fetchOutfits();
+    setUserVotes(sessionAPI.getStoredVotes());
   }, []);
+
+  const fetchOutfits = async () => {
+    try {
+      setLoading(true);
+      const response = await outfitsAPI.getAll();
+      if (response.data.success) {
+        setOutfits(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching outfits:', error);
+      toast({
+        title: "Error",
+        description: "No se pudieron cargar los outfits. Intenta de nuevo.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleVote = (outfitId) => {
     if (userVotes[outfitId]) {
