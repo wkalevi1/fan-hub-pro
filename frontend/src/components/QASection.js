@@ -6,12 +6,14 @@ import { Textarea } from './ui/textarea';
 import { Badge } from './ui/badge';
 import { questionsData, getStoredQuestions, storeQuestion } from './mockData';
 import { useToast } from '../hooks/use-toast';
+import useScrollAnimation from '../hooks/useScrollAnimation';
 
 const QASection = () => {
   const [questions, setQuestions] = useState(questionsData);
   const [newQuestion, setNewQuestion] = useState('');
   const [userQuestions, setUserQuestions] = useState(getStoredQuestions());
   const { toast } = useToast();
+  const sectionRef = useScrollAnimation();
 
   const handleSubmitQuestion = () => {
     if (!newQuestion.trim()) {
