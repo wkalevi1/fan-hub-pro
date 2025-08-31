@@ -124,7 +124,7 @@ const QASection = () => {
         {/* Answered Questions */}
         <div className="space-y-6">
           {questions.map(question => (
-            <Card key={question.id} className="bg-white/70 backdrop-blur-sm border-amber-200/50 hover:shadow-lg transition-all duration-300">
+            <Card key={question.id} className="card border-amber-200/50">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
