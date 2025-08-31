@@ -39,6 +39,7 @@ const WallpaperGallery = () => {
     }
   };
 
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const categories = ['all', 'lifestyle', 'fitness', 'fashion', 'aesthetic'];
 
   const filteredWallpapers = selectedCategory === 'all' 
@@ -46,36 +47,40 @@ const WallpaperGallery = () => {
     : wallpapers.filter(w => w.category === selectedCategory);
 
   const handleDownload = async (wallpaper) => {
-    // Simulate download
-    setWallpapers(prev =>
-      prev.map(w =>
-        w.id === wallpaper.id ? { ...w, downloads: w.downloads + 1 } : w
-      )
-    );
-
-    setDownloadedItems(prev => ({ ...prev, [wallpaper.id]: true }));
-
-    // Create download link
     try {
-      const response = await fetch(wallpaper.image);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${wallpaper.title.replace(/\s+/g, '_')}_StephanieG.jpg`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
+      // Track download in backend
+      const response = await wallpapersAPI.download(wallpaper.id);
+      
+      if (response.data.success) {
+        setDownloadedItems(prev => ({ ...prev, [wallpaper.id]: true }));
+        sessionAPI.storeDownload(wallpaper.id);
+        
+        // Create download link
+        const a = document.createElement('a');
+        a.href = response.data.data.downloadUrl;
+        a.download = `${wallpaper.title.replace(/\s+/g, '_')}_StephanieG.jpg`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
 
-      toast({
-        title: "¡Descarga iniciada!",
-        description: `${wallpaper.title} se está descargando.`,
-      });
+        toast({
+          title: "¡Descarga iniciada!",
+          description: `${wallpaper.title} se está descargando.`,
+        });
+
+        // Update local wallpaper downloads count
+        setWallpapers(prev =>
+          prev.map(w =>
+            w.id === wallpaper.id ? { ...w, downloads: response.data.data.downloads } : w
+          )
+        );
+      }
     } catch (error) {
+      console.error('Error downloading wallpaper:', error);
       toast({
-        title: "Descarga simulada",
-        description: `${wallpaper.title} - Descarga completada (simulada)`,
+        title: "Error",
+        description: "No se pudo descargar el wallpaper.",
+        variant: "destructive"
       });
     }
   };
