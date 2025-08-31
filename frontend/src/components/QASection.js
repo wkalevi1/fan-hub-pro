@@ -42,7 +42,7 @@ const QASection = () => {
     }
   };
 
-  const handleSubmitQuestion = () => {
+  const handleSubmitQuestion = async () => {
     if (!newQuestion.trim()) {
       toast({
         title: "Error",
@@ -52,23 +52,39 @@ const QASection = () => {
       return;
     }
 
-    const question = storeQuestion(newQuestion);
-    setUserQuestions([...userQuestions, question]);
-    setNewQuestion('');
+    setSubmitting(true);
     
-    toast({
-      title: "¡Pregunta enviada!",
-      description: "Stephanie responderá pronto tu pregunta.",
-    });
+    try {
+      const response = await questionsAPI.submit({
+        question: newQuestion.trim(),
+        fanName: 'Fan Anónimo'
+      });
+
+      if (response.data.success) {
+        const question = sessionAPI.storeQuestion(newQuestion);
+        setUserQuestions([...userQuestions, question]);
+        setNewQuestion('');
+        
+        toast({
+          title: "¡Pregunta enviada!",
+          description: "Stephanie responderá pronto tu pregunta.",
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting question:', error);
+      const errorMessage = error.response?.data?.error || 'Error al enviar la pregunta';
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive"
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const likeAnswer = (questionId) => {
-    setQuestions(prev =>
-      prev.map(q =>
-        q.id === questionId ? { ...q, likes: q.likes + 1 } : q
-      )
-    );
-    
+    // For now, just show feedback - in real app would call API
     toast({
       title: "¡Like añadido!",
       description: "Has marcado esta respuesta como útil.",
