@@ -1,16 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Download, Image, Filter, Eye } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
-import { wallpapersData } from './mockData';
+import { wallpapersAPI, sessionAPI } from '../services/api';
 import { useToast } from '../hooks/use-toast';
+import useScrollAnimation from '../hooks/useScrollAnimation';
+import Loader from './Loader';
 
 const WallpaperGallery = () => {
-  const [wallpapers, setWallpapers] = useState(wallpapersData);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [wallpapers, setWallpapers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [downloadedItems, setDownloadedItems] = useState({});
   const { toast } = useToast();
+  const sectionRef = useScrollAnimation();
+
+  useEffect(() => {
+    fetchWallpapers();
+    setDownloadedItems(sessionAPI.getStoredDownloads());
+  }, []);
+
+  const fetchWallpapers = async () => {
+    try {
+      setLoading(true);
+      const response = await wallpapersAPI.getAll();
+      if (response.data.success) {
+        setWallpapers(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching wallpapers:', error);
+      toast({
+        title: "Error",
+        description: "No se pudieron cargar los wallpapers.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const categories = ['all', 'lifestyle', 'fitness', 'fashion', 'aesthetic'];
 
