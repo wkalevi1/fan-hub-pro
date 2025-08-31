@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bell, X, Zap, Live } from 'lucide-react';
+import { Bell, X, Zap, Radio } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { useToast } from '../hooks/use-toast';
