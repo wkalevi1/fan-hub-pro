@@ -1,6 +1,7 @@
 import React from 'react';
 import { Crown, Menu } from 'lucide-react';
 import { Button } from './ui/button';
+import DarkModeToggle from './DarkModeToggle';
 
 const Header = () => {
   return (
@@ -19,9 +20,12 @@ const Header = () => {
             </div>
           </div>
           
-          <Button variant="ghost" size="icon" className="hover:bg-amber-100/50">
-            <Menu className="h-5 w-5 text-amber-700" />
-          </Button>
+          <div className="flex items-center space-x-2">
+            <DarkModeToggle />
+            <Button variant="ghost" size="icon" className="hover:bg-amber-100/50">
+              <Menu className="h-5 w-5 text-amber-700" />
+            </Button>
+          </div>
         </div>
       </div>
     </header>
