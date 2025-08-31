@@ -116,7 +116,9 @@ const OutfitRanking = () => {
               </div>
 
               <CardContent className="p-4">
-                <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                <h3 className={`font-semibold text-lg text-gray-900 mb-2 ${
+                  index === 0 ? 'top-fan' : ''
+                }`}>
                   {outfit.title}
                 </h3>
                 
