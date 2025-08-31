@@ -91,7 +91,7 @@ const OutfitRanking = () => {
           {sortedOutfits.map((outfit, index) => (
             <Card 
               key={outfit.id} 
-              className="group overflow-hidden bg-white/70 backdrop-blur-sm border-amber-200/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              className="card group overflow-hidden border-amber-200/50"
             >
               <div className="relative">
                 {index < 3 && (
