@@ -111,6 +111,19 @@ const OutfitRanking = () => {
 
   const sortedOutfits = [...outfits].sort((a, b) => b.votes - a.votes);
 
+  if (loading) {
+    return (
+      <section ref={sectionRef} className="section section-bg py-16 lg:py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <Loader size="lg" />
+            <p className="mt-4 text-gray-600">Cargando outfits...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section ref={sectionRef} className="section section-bg py-16 lg:py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -167,21 +180,21 @@ const OutfitRanking = () => {
                     <span>{outfit.votes} votos</span>
                   </div>
                   <span className="text-sm font-medium text-amber-600">
-                    {outfit.percentage}%
+                    {Math.round(outfit.percentage / 100)}%
                   </span>
                 </div>
 
                 <div className="vote-bar-container mb-3">
                   <div 
                     className="vote-bar" 
-                    style={{ width: `${outfit.percentage}%` }}
+                    style={{ width: `${Math.min(outfit.percentage / 100, 100)}%` }}
                   ></div>
                 </div>
 
                 <div className="flex items-center justify-between mb-3">
                   <Button
                     onClick={() => handleVote(outfit.id)}
-                    disabled={userVotes[outfit.id] || loading}
+                    disabled={userVotes[outfit.id] || votingLoading[outfit.id]}
                     size="sm"
                     className={`${
                       userVotes[outfit.id] 
@@ -189,7 +202,7 @@ const OutfitRanking = () => {
                         : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600'
                     } text-white rounded-lg transition-all duration-300 flex items-center`}
                   >
-                    {loading ? (
+                    {votingLoading[outfit.id] ? (
                       <Loader size="sm" className="mr-1" />
                     ) : (
                       <Heart className={`h-4 w-4 mr-1 ${userVotes[outfit.id] ? 'fill-white' : ''}`} />
@@ -203,6 +216,7 @@ const OutfitRanking = () => {
                         key={emoji}
                         onClick={() => addEmoji(outfit.id, emoji)}
                         className="w-8 h-8 rounded-full hover:bg-amber-100 transition-colors duration-200 flex items-center justify-center text-lg"
+                        disabled={votingLoading[outfit.id]}
                       >
                         {emoji}
                       </button>
@@ -210,7 +224,7 @@ const OutfitRanking = () => {
                   </div>
                 </div>
 
-                {outfit.comments.length > 0 && (
+                {outfit.comments && outfit.comments.length > 0 && (
                   <div className="border-t border-gray-200 pt-2">
                     <div className="flex items-center text-sm text-gray-500 mb-1">
                       <MessageCircle className="h-3 w-3 mr-1" />
@@ -219,12 +233,12 @@ const OutfitRanking = () => {
                     <div className="space-y-1">
                       {outfit.comments.slice(0, 2).map(comment => (
                         <p key={comment.id} className={`text-xs text-gray-600 bg-gray-50 rounded px-2 py-1 ${
-                          comment.text.includes('Perfecto') || comment.text.includes('Amor') ? 'top-fan' : ''
+                          comment.text && (comment.text.includes('Perfecto') || comment.text.includes('Amor')) ? 'top-fan' : ''
                         }`}>
                           {comment.emoji} {comment.text}
-                          {comment.text.includes('Perfecto') && <span className="fan-badge">VIP Fan</span>}
-                          {comment.text.includes('Amor') && <span className="fan-badge">Super Fan</span>}
-                          {comment.text.includes('elegante') && <span className="fan-badge">Style Expert</span>}
+                          {comment.text && comment.text.includes('Perfecto') && <span className="fan-badge">VIP Fan</span>}
+                          {comment.text && comment.text.includes('Amor') && <span className="fan-badge">Super Fan</span>}
+                          {comment.text && comment.text.includes('elegante') && <span className="fan-badge">Style Expert</span>}
                         </p>
                       ))}
                     </div>
