@@ -428,7 +428,7 @@ class FanHubAPITester:
         self.test_response_format()
         
         print("=" * 60)
-        self.print_summary()
+        return self.print_summary()
     
     def print_summary(self):
         """Print test summary"""
