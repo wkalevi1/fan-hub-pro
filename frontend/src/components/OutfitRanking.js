@@ -150,15 +150,19 @@ const OutfitRanking = () => {
                 <div className="flex items-center justify-between mb-3">
                   <Button
                     onClick={() => handleVote(outfit.id)}
-                    disabled={userVotes[outfit.id]}
+                    disabled={userVotes[outfit.id] || loading}
                     size="sm"
                     className={`${
                       userVotes[outfit.id] 
                         ? 'bg-gray-400 cursor-not-allowed' 
                         : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600'
-                    } text-white rounded-lg transition-all duration-300`}
+                    } text-white rounded-lg transition-all duration-300 flex items-center`}
                   >
-                    <Heart className={`h-4 w-4 mr-1 ${userVotes[outfit.id] ? 'fill-white' : ''}`} />
+                    {loading ? (
+                      <Loader size="sm" className="mr-1" />
+                    ) : (
+                      <Heart className={`h-4 w-4 mr-1 ${userVotes[outfit.id] ? 'fill-white' : ''}`} />
+                    )}
                     {userVotes[outfit.id] ? 'Votado' : 'Votar'}
                   </Button>
 
