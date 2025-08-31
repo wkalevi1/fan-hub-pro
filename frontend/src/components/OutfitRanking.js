@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Heart, MessageCircle, TrendingUp, Award } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
-import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
 import { outfitData, getStoredVotes, storeVote } from './mockData';
 import { useToast } from '../hooks/use-toast';
+import useScrollAnimation from '../hooks/useScrollAnimation';
 
 const OutfitRanking = () => {
   const [outfits, setOutfits] = useState(outfitData);
   const [userVotes, setUserVotes] = useState({});
   const [selectedEmoji, setSelectedEmoji] = useState({});
   const { toast } = useToast();
+  const sectionRef = useScrollAnimation();
 
   useEffect(() => {
     setUserVotes(getStoredVotes());
