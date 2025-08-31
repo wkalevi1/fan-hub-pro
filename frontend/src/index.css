@@ -1,22 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
         "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
         "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    letter-spacing: 0.025em;
 }
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
         monospace;
 }
-
-
 
 @layer base {
   :root {
@@ -26,25 +26,25 @@ code {
         --card-foreground: 0 0% 3.9%;
         --popover: 0 0% 100%;
         --popover-foreground: 0 0% 3.9%;
-        --primary: 0 0% 9%;
+        --primary: 31 91% 51%;
         --primary-foreground: 0 0% 98%;
         --secondary: 0 0% 96.1%;
         --secondary-foreground: 0 0% 9%;
         --muted: 0 0% 96.1%;
         --muted-foreground: 0 0% 45.1%;
-        --accent: 0 0% 96.1%;
-        --accent-foreground: 0 0% 9%;
+        --accent: 31 91% 51%;
+        --accent-foreground: 0 0% 98%;
         --destructive: 0 84.2% 60.2%;
         --destructive-foreground: 0 0% 98%;
-        --border: 0 0% 89.8%;
-        --input: 0 0% 89.8%;
-        --ring: 0 0% 3.9%;
-        --chart-1: 12 76% 61%;
-        --chart-2: 173 58% 39%;
-        --chart-3: 197 37% 24%;
+        --border: 31 50% 89.8%;
+        --input: 31 50% 89.8%;
+        --ring: 31 91% 51%;
+        --chart-1: 31 91% 51%;
+        --chart-2: 22 91% 55%;
+        --chart-3: 15 91% 60%;
         --chart-4: 43 74% 66%;
         --chart-5: 27 87% 67%;
-        --radius: 0.5rem;
+        --radius: 0.75rem;
     }
   .dark {
         --background: 0 0% 3.9%;
@@ -53,7 +53,7 @@ code {
         --card-foreground: 0 0% 98%;
         --popover: 0 0% 3.9%;
         --popover-foreground: 0 0% 98%;
-        --primary: 0 0% 98%;
+        --primary: 31 91% 51%;
         --primary-foreground: 0 0% 9%;
         --secondary: 0 0% 14.9%;
         --secondary-foreground: 0 0% 98%;
@@ -65,16 +65,14 @@ code {
         --destructive-foreground: 0 0% 98%;
         --border: 0 0% 14.9%;
         --input: 0 0% 14.9%;
-        --ring: 0 0% 83.1%;
-        --chart-1: 220 70% 50%;
-        --chart-2: 160 60% 45%;
-        --chart-3: 30 80% 55%;
+        --ring: 31 91% 51%;
+        --chart-1: 31 91% 51%;
+        --chart-2: 22 91% 55%;
+        --chart-3: 15 91% 60%;
         --chart-4: 280 65% 60%;
         --chart-5: 340 75% 55%;
     }
 }
-
-
 
 @layer base {
   * {
@@ -83,4 +81,129 @@ code {
   body {
     @apply bg-background text-foreground;
     }
+}
+
+/* Custom utility classes */
+@layer utilities {
+  .golden-gradient {
+    @apply bg-gradient-to-r from-amber-400 via-orange-500 to-amber-600;
+  }
+  
+  .golden-text {
+    @apply bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent;
+  }
+  
+  .glass-effect {
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+  }
+  
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+  
+  .golden-shadow {
+    box-shadow: 0 10px 25px -3px rgba(245, 158, 11, 0.1), 0 4px 6px -2px rgba(245, 158, 11, 0.05);
+  }
+  
+  .golden-shadow-lg {
+    box-shadow: 0 20px 25px -5px rgba(245, 158, 11, 0.1), 0 10px 10px -5px rgba(245, 158, 11, 0.04);
+  }
+}
+
+/* Scrollbar customization */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #f59e0b #f3f4f6;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #d97706, #dc2626);
+}
+
+/* Animation classes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #f3f4f6 0px, #e5e7eb 40px, #f3f4f6 80px);
+  background-size: 200px;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Focus improvements */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+  border-color: #f59e0b;
+}
+
+/* Selection styling */
+::selection {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+::-moz-selection {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .text-4xl {
+    @apply text-3xl;
+  }
+  
+  .text-5xl {
+    @apply text-4xl;
+  }
+  
+  .text-6xl {
+    @apply text-5xl;
+  }
+  
+  .py-20 {
+    @apply py-12;
+  }
+  
+  .py-16 {
+    @apply py-10;
+  }
 }
