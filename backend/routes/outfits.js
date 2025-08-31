@@ -2,35 +2,28 @@ const express = require('express');
 const router = express.Router();
 const Outfit = require('../models/Outfit');
 const Vote = require('../models/Vote');
-const Fan = require('../models/Fan');
 
 // GET /api/outfits - Get all outfits with ranking
 router.get('/', async (req, res) => {
   try {
-    const outfits = await Outfit.find({ isActive: true })
-      .populate('comments.fanId', 'username avatar badges')
-      .sort({ votes: -1, createdAt: -1 });
+    const outfits = await Outfit.find().sort({ votes: -1, createdAt: -1 });
     
-    // Calculate percentages
+    // Calculate percentages and add ranking
     const totalVotes = await Vote.countDocuments();
     
-    const outfitsWithRanking = await Promise.all(
-      outfits.map(async (outfit, index) => {
-        const voteCount = await Vote.countDocuments({ outfitId: outfit._id });
-        const percentage = totalVotes > 0 ? Math.round((voteCount / totalVotes) * 100) : 0;
-        
-        return {
-          ...outfit.toObject(),
-          votes: voteCount,
-          percentage,
-          ranking: index + 1
-        };
-      })
-    );
+    const outfitsWithStats = outfits.map((outfit, index) => ({
+      id: outfit._id,
+      title: outfit.title,
+      image: outfit.imageUrl,
+      votes: outfit.votes,
+      percentage: totalVotes > 0 ? Math.round((outfit.votes / totalVotes) * 100) : 0,
+      ranking: index + 1,
+      comments: [] // Will be populated from votes with reactions
+    }));
     
     res.json({
       success: true,
-      data: outfitsWithRanking,
+      data: outfitsWithStats,
       total: outfits.length
     });
   } catch (error) {
@@ -42,11 +35,10 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/outfits/:id - Get single outfit
+// GET /api/outfits/:id - Get single outfit with reactions
 router.get('/:id', async (req, res) => {
   try {
-    const outfit = await Outfit.findById(req.params.id)
-      .populate('comments.fanId', 'username avatar badges');
+    const outfit = await Outfit.findById(req.params.id);
     
     if (!outfit) {
       return res.status(404).json({
@@ -55,16 +47,30 @@ router.get('/:id', async (req, res) => {
       });
     }
     
-    const voteCount = await Vote.countDocuments({ outfitId: outfit._id });
+    // Get reactions for this outfit
+    const votes = await Vote.find({ outfitId: req.params.id })
+      .populate('fanId', 'username')
+      .sort({ createdAt: -1 });
+    
+    const comments = votes.map(vote => ({
+      id: vote._id,
+      text: vote.reaction,
+      emoji: vote.reaction,
+      fanName: vote.fanId?.username || 'Fan Anónimo'
+    }));
+    
     const totalVotes = await Vote.countDocuments();
-    const percentage = totalVotes > 0 ? Math.round((voteCount / totalVotes) * 100) : 0;
+    const percentage = totalVotes > 0 ? Math.round((outfit.votes / totalVotes) * 100) : 0;
     
     res.json({
       success: true,
       data: {
-        ...outfit.toObject(),
-        votes: voteCount,
-        percentage
+        id: outfit._id,
+        title: outfit.title,
+        image: outfit.imageUrl,
+        votes: outfit.votes,
+        percentage,
+        comments
       }
     });
   } catch (error) {
@@ -76,16 +82,14 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST /api/outfits - Create new outfit (admin only)
+// POST /api/outfits - Create new outfit
 router.post('/', async (req, res) => {
   try {
-    const { title, image, description, category } = req.body;
+    const { title, imageUrl } = req.body;
     
     const outfit = new Outfit({
       title,
-      image,
-      description,
-      category
+      imageUrl
     });
     
     await outfit.save();
@@ -100,103 +104,6 @@ router.post('/', async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Error creating outfit'
-    });
-  }
-});
-
-// POST /api/outfits/:id/comment - Add comment to outfit
-router.post('/:id/comment', async (req, res) => {
-  try {
-    const { text, emoji, fanId } = req.body;
-    const outfitId = req.params.id;
-    
-    const outfit = await Outfit.findById(outfitId);
-    if (!outfit) {
-      return res.status(404).json({
-        success: false,
-        error: 'Outfit not found'
-      });
-    }
-    
-    const comment = {
-      text,
-      emoji,
-      fanId: fanId || null
-    };
-    
-    outfit.comments.push(comment);
-    await outfit.save();
-    
-    // Add points to fan if logged in
-    if (fanId) {
-      const fan = await Fan.findById(fanId);
-      if (fan) {
-        await fan.addPoints(5, 'comment');
-      }
-    }
-    
-    await outfit.populate('comments.fanId', 'username avatar badges');
-    
-    res.json({
-      success: true,
-      data: outfit,
-      message: 'Comment added successfully'
-    });
-  } catch (error) {
-    console.error('Error adding comment:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error adding comment'
-    });
-  }
-});
-
-// GET /api/outfits/trending/weekly - Get trending outfits this week
-router.get('/trending/weekly', async (req, res) => {
-  try {
-    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    
-    const trendingVotes = await Vote.aggregate([
-      {
-        $match: {
-          createdAt: { $gte: oneWeekAgo }
-        }
-      },
-      {
-        $group: {
-          _id: '$outfitId',
-          weeklyVotes: { $sum: 1 }
-        }
-      },
-      {
-        $sort: { weeklyVotes: -1 }
-      },
-      {
-        $limit: 10
-      },
-      {
-        $lookup: {
-          from: 'outfits',
-          localField: '_id',
-          foreignField: '_id',
-          as: 'outfit'
-        }
-      },
-      {
-        $unwind: '$outfit'
-      }
-    ]);
-    
-    res.json({
-      success: true,
-      data: trendingVotes,
-      period: 'weekly'
-    });
-  } catch (error) {
-    console.error('Error fetching trending outfits:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error fetching trending outfits'
     });
   }
 });
