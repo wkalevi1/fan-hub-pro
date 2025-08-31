@@ -96,8 +96,21 @@ const WallpaperGallery = () => {
     return labels[category] || category;
   };
 
+  if (loading) {
+    return (
+      <section ref={sectionRef} className="section py-16 lg:py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <Loader size="lg" />
+            <p className="mt-4 text-gray-600">Cargando wallpapers...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className="py-16 lg:py-20">
+    <section ref={sectionRef} className="section py-16 lg:py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
