@@ -1,19 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageSquare, Send, Play, Heart, Clock, Video } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader } from './ui/card';
 import { Textarea } from './ui/textarea';
 import { Badge } from './ui/badge';
-import { questionsData, getStoredQuestions, storeQuestion } from './mockData';
+import { questionsAPI, sessionAPI } from '../services/api';
 import { useToast } from '../hooks/use-toast';
 import useScrollAnimation from '../hooks/useScrollAnimation';
+import Loader from './Loader';
 
 const QASection = () => {
-  const [questions, setQuestions] = useState(questionsData);
+  const [questions, setQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState('');
-  const [userQuestions, setUserQuestions] = useState(getStoredQuestions());
+  const [userQuestions, setUserQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
   const sectionRef = useScrollAnimation();
+
+  useEffect(() => {
+    fetchQuestions();
+    setUserQuestions(sessionAPI.getStoredQuestions());
+  }, []);
+
+  const fetchQuestions = async () => {
+    try {
+      setLoading(true);
+      const response = await questionsAPI.getAll();
+      if (response.data.success) {
+        setQuestions(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+      toast({
+        title: "Error",
+        description: "No se pudieron cargar las preguntas.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmitQuestion = () => {
     if (!newQuestion.trim()) {
