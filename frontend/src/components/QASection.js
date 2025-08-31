@@ -148,10 +148,15 @@ const QASection = () => {
                 </span>
                 <Button
                   onClick={handleSubmitQuestion}
-                  className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
+                  disabled={submitting}
+                  className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white flex items-center"
                 >
-                  <Send className="h-4 w-4 mr-2" />
-                  Enviar Pregunta
+                  {submitting ? (
+                    <Loader size="sm" className="mr-2" />
+                  ) : (
+                    <Send className="h-4 w-4 mr-2" />
+                  )}
+                  {submitting ? 'Enviando...' : 'Enviar Pregunta'}
                 </Button>
               </div>
             </div>
