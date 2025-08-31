@@ -40,7 +40,7 @@ const OutfitRanking = () => {
     }
   };
 
-  const handleVote = (outfitId) => {
+  const handleVote = async (outfitId) => {
     if (userVotes[outfitId]) {
       toast({
         title: "¡Ya votaste por este outfit!",
@@ -50,52 +50,63 @@ const OutfitRanking = () => {
       return;
     }
 
-    setLoading(true);
+    setVotingLoading(prev => ({ ...prev, [outfitId]: true }));
     
-    // Simulate API call delay
-    setTimeout(() => {
-      setOutfits(prev => 
-        prev.map(outfit => 
-          outfit.id === outfitId 
-            ? { ...outfit, votes: outfit.votes + 1, percentage: outfit.percentage + 1 }
-            : outfit
-        )
-      );
-
-      const newVotes = { ...userVotes, [outfitId]: true };
-      setUserVotes(newVotes);
-      storeVote(outfitId);
-      setLoading(false);
-
-      toast({
-        title: "¡Voto registrado!",
-        description: "Gracias por votar por tu outfit favorito.",
+    try {
+      const response = await votesAPI.vote({
+        outfitId: outfitId,
+        reaction: '💖'
       });
-    }, 800);
+
+      if (response.data.success) {
+        // Update local state
+        const newVotes = { ...userVotes, [outfitId]: true };
+        setUserVotes(newVotes);
+        sessionAPI.storeVote(outfitId);
+
+        // Refresh outfits to get updated vote counts
+        await fetchOutfits();
+
+        toast({
+          title: "¡Voto registrado!",
+          description: "Gracias por votar por tu outfit favorito.",
+        });
+      }
+    } catch (error) {
+      console.error('Error voting:', error);
+      const errorMessage = error.response?.data?.error || 'Error al votar';
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive"
+      });
+    } finally {
+      setVotingLoading(prev => ({ ...prev, [outfitId]: false }));
+    }
   };
 
-  const addEmoji = (outfitId, emoji) => {
-    setOutfits(prev =>
-      prev.map(outfit =>
-        outfit.id === outfitId
-          ? {
-              ...outfit,
-              comments: [...outfit.comments, {
-                id: Date.now(),
-                text: `Reacción: ${emoji}`,
-                emoji: emoji
-              }]
-            }
-          : outfit
-      )
-    );
+  const addEmoji = async (outfitId, emoji) => {
+    try {
+      await votesAPI.vote({
+        outfitId: outfitId,
+        reaction: emoji
+      });
 
-    setSelectedEmoji({ ...selectedEmoji, [outfitId]: emoji });
-    
-    toast({
-      title: "¡Reacción añadida!",
-      description: `Has reaccionado con ${emoji}`,
-    });
+      toast({
+        title: "¡Reacción añadida!",
+        description: `Has reaccionado con ${emoji}`,
+      });
+
+      // Refresh outfits to show new reaction
+      await fetchOutfits();
+    } catch (error) {
+      console.error('Error adding emoji:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo añadir la reacción.",
+        variant: "destructive"
+      });
+    }
   };
 
   const sortedOutfits = [...outfits].sort((a, b) => b.votes - a.votes);
