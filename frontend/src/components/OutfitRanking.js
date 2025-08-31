@@ -191,6 +191,9 @@ const OutfitRanking = () => {
                           comment.text.includes('Perfecto') || comment.text.includes('Amor') ? 'top-fan' : ''
                         }`}>
                           {comment.emoji} {comment.text}
+                          {comment.text.includes('Perfecto') && <span className="fan-badge">VIP Fan</span>}
+                          {comment.text.includes('Amor') && <span className="fan-badge">Super Fan</span>}
+                          {comment.text.includes('elegante') && <span className="fan-badge">Style Expert</span>}
                         </p>
                       ))}
                     </div>
