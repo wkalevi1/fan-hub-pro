@@ -53,7 +53,8 @@
     "test": "craco test",
     "eject": "react-scripts eject",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,md}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,md}\"",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
@@ -67,11 +68,4 @@
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "prettier": "^3.3.3",
     "lint-staged": "^15.2.0",
-    "husky": "^9.0.11"
-  },
-  "overrides": {
-    "ajv": "6.12.6",
-    "ajv-keywords": "3.5.2",
-    "schema-utils": "3.3.0"
-  }
-}
+    "husky": "^9.0
