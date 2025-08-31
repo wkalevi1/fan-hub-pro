@@ -117,7 +117,7 @@ const NotificationBanner = () => {
                       onClick={handleSubscribe}
                       className="bg-white text-amber-600 hover:bg-gray-100 font-semibold px-6 py-2 w-full sm:w-auto"
                     >
-                      <Live className="h-4 w-4 mr-2" />
+                      <Radio className="h-4 w-4 mr-2" />
                       Suscribirme
                     </Button>
                   </div>
