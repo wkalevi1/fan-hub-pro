@@ -462,13 +462,17 @@ class FanHubAPITester:
 def main():
     """Main function to run tests"""
     tester = FanHubAPITester()
-    summary = tester.run_all_tests()
-    
-    # Exit with error code if tests failed
-    if summary['failed'] > 0:
+    try:
+        summary = tester.run_all_tests()
+        
+        # Exit with error code if tests failed
+        if summary and summary['failed'] > 0:
+            sys.exit(1)
+        else:
+            sys.exit(0)
+    except Exception as e:
+        print(f"❌ Test execution failed: {str(e)}")
         sys.exit(1)
-    else:
-        sys.exit(0)
 
 if __name__ == "__main__":
     main()
