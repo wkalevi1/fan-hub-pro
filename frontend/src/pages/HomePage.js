@@ -1,4 +1,5 @@
-import React from 'react';
+// fan-hub-pro/frontend/src/pages/HomePage.js
+import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import OutfitRanking from '../components/OutfitRanking';
@@ -7,10 +8,29 @@ import WallpaperGallery from '../components/WallpaperGallery';
 import NotificationBanner from '../components/NotificationBanner';
 import SocialLinks from '../components/SocialLinks';
 import Footer from '../components/Footer';
+import { api, API_BASE_URL } from '../lib/api';
 
-const HomePage = () => {
+export default function HomePage() {
+  const [apiMsg, setApiMsg] = useState(null);
+
+  useEffect(() => {
+    api.get('/health')
+      .then(r => setApiMsg(`API ok: ${JSON.stringify(r.data)}`))
+      .catch(e => setApiMsg(`API error: ${e?.message || String(e)}`));
+  }, []);
+
+  const ok = apiMsg?.startsWith('API ok');
+  const barClass =
+    'w-full text-xs text-white px-3 py-2 ' + (ok ? 'bg-emerald-600/90' : 'bg-red-600/90');
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-amber-50/30 to-orange-50/40">
+      {apiMsg && (
+        <div className={barClass}>
+          {apiMsg} <span className="opacity-70">({API_BASE_URL})</span>
+        </div>
+      )}
+
       <Header />
       <HeroSection />
       <OutfitRanking />
@@ -20,21 +40,7 @@ const HomePage = () => {
       <SocialLinks />
       <Footer />
     </div>
-  );import React, { useEffect, useState } from 'react';
-import { api, API_BASE_URL } from '../lib/api'; // desde /pages sube a /lib
-
-export default function HomePage() {
-  const [msg, setMsg] = useState('Cargando… (' + API_BASE_URL + ')');
-
-  useEffect(() => {
-    api.get('/health')
-      .then(r => setMsg('API ok: ' + JSON.stringify(r.data)))
-      .catch(e => setMsg('API error: ' + (e?.message || String(e))));
-  }, []);
-
-  return <div style={{ padding: 16 }}>{msg}</div>;
+  );
 }
 
-};
 
-export default HomePage;
