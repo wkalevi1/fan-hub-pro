@@ -1,20 +1,11 @@
+// frontend/src/App.js
 import React from "react";
-import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import { Toaster } from "./components/ui/toaster";
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-        </Routes>
-        <Toaster />
-      </BrowserRouter>
+    <div style={{ padding: 24, fontFamily: "system-ui" }}>
+      <h1>StephanieG Fans — Frontend OK ✅</h1>
+      <p>Si ves este texto, React montó bien. El problema está en alguna página/componente.</p>
     </div>
   );
 }
-
-export default App;
