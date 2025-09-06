@@ -1,3 +1,5 @@
 /api/*  https://api.stephanieg.co/:splat  200
 /*      /index.html                       200
+/api/*  https://mi-backend.com/api/:splat  200
+/*      /index.html                      200
 
