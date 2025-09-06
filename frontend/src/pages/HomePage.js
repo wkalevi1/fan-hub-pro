@@ -32,5 +32,21 @@ export default function HomePage() {
           color: "#fff",
           padding: "6px 10px",
           fontSize: 12,
+          marginBottom: 12
+        }}>
+          {msg} <span style={{ opacity: .6 }}>({API_BASE_URL})</span>
+        </div>
+      )}
 
+      <Header />
+      <HeroSection />
+      <OutfitRanking />
+      <QASection />
+      <WallpaperGallery />
+      <NotificationBanner />
+      <SocialLinks />
+      <Footer />
+    </div>
+  );
+}
 
