@@ -1,25 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { api, API_BASE_URL } from "../lib/api";
+import React from "react";
 
 export default function HomePage() {
-  const [msg, setMsg] = useState("Comprobando API… (" + API_BASE_URL + ")");
-
-  useEffect(() => {
-    api.get("/health")
-      .then(r => setMsg("API ok: " + JSON.stringify(r.data)))
-      .catch(e => setMsg("API error: " + (e?.message || String(e))));
-  }, []);
-
-  const ok = msg.startsWith("API ok");
   return (
-    <div style={{ padding: 24 }}>
-      <div style={{
-        background: ok ? "#16a34a" : "#b00020",
-        color: "#fff", padding: "6px 10px", fontSize: 12
-      }}>
-        {msg}
-      </div>
-      <p>HomePage mínima ✅</p>
+    <div style={{ padding: 24, fontFamily: "system-ui" }}>
+      <h1>HomePage mínima ✅</h1>
+      <p>Si ves esto, el router funciona y React montó bien.</p>
     </div>
   );
 }
