@@ -11,7 +11,7 @@ import NotificationBanner from "../components/NotificationBanner";
 import SocialLinks from "../components/SocialLinks";
 import Footer from "../components/Footer";
 
-const SHOW_DEBUG = false; // ← pon en true si querés ver la barra
+const SHOW_DEBUG = false; // pon en true si querés ver la barra de estado del API
 
 export default function HomePage() {
   const [msg, setMsg] = useState("");
@@ -29,21 +29,8 @@ export default function HomePage() {
       {SHOW_DEBUG && (
         <div style={{
           background: ok ? "#16a34a" : "#b00020",
-          color:"#fff", padding:"6px 10px", fontSize:12, marginBottom:12
-        }}>
-          {msg} <span style={{opacity:.6}}>({API_BASE_URL})</span>
-        </div>
-      )}
+          color: "#fff",
+          padding: "6px 10px",
+          fontSize: 12,
 
-      <Header />
-      <HeroSection />
-      <OutfitRanking />
-      <QASection />
-      <WallpaperGallery />
-      <NotificationBanner />
-      <SocialLinks />
-      <Footer />
-    </div>
-  );
-}
 
