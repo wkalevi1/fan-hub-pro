@@ -2,4 +2,6 @@
 /*      /index.html                       200
 /api/*  https://mi-backend.com/api/:splat  200
 /*      /index.html                      200
+/api/*  https://TU-BACKEND.onrender.com/:splat  200
+/*      /index.html                              200
 
